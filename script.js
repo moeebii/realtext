@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const textContainer = document.getElementById("text-container");
+  const arrow = document.querySelector('.arrow');
+
 
   const paragraphs = [
     "In his A History of the World War (page 212), Captain Liddell Hart reports that a planned offensive by thirteen British divisions, supported by fourteen hundred artillery pieces, against the German line at Serre-Montauban, scheduled for July 24, 1916, had to be postponed until the morning of the 29th. He comments that torrential rain caused this delay - which lacked any special significance. The following deposition, dictated by, read over, and then signed by Dr. Yu Tsun, former teacher of English at the Tsingtao Hochschule, casts unsuspected light upon this event. The first two pages are missing.",
@@ -68,13 +70,20 @@ document.addEventListener("DOMContentLoaded", function () {
     "What remains is unreal and unimportant. Madden broke in and arrested me. I have been condemned to hang. Abominably, I have yet triumphed! The secret name of the city to be attacked got through to Berlin. Yesterday it was bombed. I read the news in the same English newspapers which were trying to solve the riddle of the murder of the learned Sinologist Stephen Albert by the unknown Yu Tsun. The Chief, however, had already solved this mystery. He knew that my problem was to shout, with my feeble voice, above the tumult of war, the name of the city called Albert, and that I had no other course open to me than to kill someone of that name. He does not know, for no one can, of my infinite penitence and sickness of the heart.",
 ];
 
-
 let currentPara = 0;
 
 function displayParagraph(paraIndex) {
   if (paraIndex >= 0 && paraIndex < paragraphs.length) {
     textContainer.innerHTML = paragraphs[paraIndex];
     currentPara = paraIndex;
+
+    // Hide the arrow if it's the first paragraph
+    if (currentPara === 0) {
+      arrow.style.display = 'none';
+    } else {
+      arrow.style.display = 'block';
+    }
+
     textContainer.classList.add("fade-in");
   }
 }
@@ -91,7 +100,10 @@ function displayNextParagraph() {
 }
 
 function handleClick() {
-  displayNextParagraph();
+  if (event.target !== arrow) {
+    // Only go to the next paragraph if the click target is not the arrow
+    displayNextParagraph();
+  }
 }
 
 window.goToPreviousParagraph = function () {
@@ -100,8 +112,33 @@ window.goToPreviousParagraph = function () {
   }
 };
 
+// Add click event listener to the document
 document.addEventListener("click", handleClick);
 
 // Initial display
 displayParagraph(currentPara);
 });
+
+function displayParagraph(paraIndex) {
+  if (paraIndex >= 0 && paraIndex < paragraphs.length) {
+    textContainer.innerHTML = paragraphs[paraIndex];
+    currentPara = paraIndex;
+
+    // Hide the arrow if it's the first paragraph
+    if (currentPara === 0) {
+      arrow.style.display = 'none';
+    } else {
+      arrow.style.display = 'block';
+    }
+
+    // Remove existing "fade-in" class
+    textContainer.classList.remove("fade-in");
+
+    // Apply the "fade-in" class after a small delay
+    setTimeout(function () {
+      textContainer.classList.add("fade-in");
+    }, 500); // Adjust the delay (in milliseconds) to your preference
+  }
+}
+
+
