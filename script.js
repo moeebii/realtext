@@ -68,31 +68,40 @@ document.addEventListener("DOMContentLoaded", function () {
     "What remains is unreal and unimportant. Madden broke in and arrested me. I have been condemned to hang. Abominably, I have yet triumphed! The secret name of the city to be attacked got through to Berlin. Yesterday it was bombed. I read the news in the same English newspapers which were trying to solve the riddle of the murder of the learned Sinologist Stephen Albert by the unknown Yu Tsun. The Chief, however, had already solved this mystery. He knew that my problem was to shout, with my feeble voice, above the tumult of war, the name of the city called Albert, and that I had no other course open to me than to kill someone of that name. He does not know, for no one can, of my infinite penitence and sickness of the heart.",
 ];
 
-  let currentPara = 0;
 
-  function displayNextParagraph() {
-    if (currentPara < paragraphs.length) {
-      textContainer.innerHTML = paragraphs[currentPara];
-      currentPara++;
-    } else {
-      textContainer.innerHTML = "End of text.";
-    }
+let currentPara = 0;
+
+function displayParagraph(paraIndex) {
+  if (paraIndex >= 0 && paraIndex < paragraphs.length) {
+    textContainer.innerHTML = paragraphs[paraIndex];
+    currentPara = paraIndex;
     textContainer.classList.add("fade-in");
   }
+}
 
-  // Add a click event listener to the text container
-  textContainer.addEventListener("click", displayNextParagraph);
+function displayNextParagraph() {
+  if (currentPara < paragraphs.length - 1) {
+    displayParagraph(currentPara + 1);
+  } else {
+    textContainer.innerHTML = "The End";
+    setTimeout(function () {
+      window.location.href = "https://moeebii.github.io/thegardenofforkingpaths/";
+    }, 2000);
+  }
+}
 
-  // Add a reference to the goToPreviousParagraph function
-  window.goToPreviousParagraph = function() {
-    if (currentPara > 0) {
-      currentPara--;
-      textContainer.innerHTML = paragraphs[currentPara];
-      textContainer.classList.add("fade-in");
-    }
-  };
-
-  // Initial display
+function handleClick() {
   displayNextParagraph();
+}
+
+window.goToPreviousParagraph = function () {
+  if (currentPara > 0) {
+    displayParagraph(currentPara - 1);
+  }
+};
+
+document.addEventListener("click", handleClick);
+
+// Initial display
+displayParagraph(currentPara);
 });
-  
