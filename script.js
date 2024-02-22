@@ -68,88 +68,77 @@ document.addEventListener("DOMContentLoaded", function () {
     "\"<em>The future exists now,</em>\" I replied. \"<em>But I am your friend. Can I take another look at the letter?</em>\"",
     "Albert rose from his seat. He stood up tall as he opened the top drawer of the high writing cabinet. For a moment his back was again turned to me. I had the revolver ready. I fired with the utmost care: Albert fell without a murmur, at once. I swear that his death was instantaneous, as if he had been struck by lightning.",
     "What remains is unreal and unimportant. Madden broke in and arrested me. I have been condemned to hang. Abominably, I have yet triumphed! The secret name of the city to be attacked got through to Berlin. Yesterday it was bombed. I read the news in the same English newspapers which were trying to solve the riddle of the murder of the learned Sinologist Stephen Albert by the unknown Yu Tsun. The Chief, however, had already solved this mystery. He knew that my problem was to shout, with my feeble voice, above the tumult of war, the name of the city called Albert, and that I had no other course open to me than to kill someone of that name. He does not know, for no one can, of my infinite penitence and sickness of the heart.",
-];
+    "The End"
+  ];
 
-let currentPara = 0;
+  let currentPara = 0;
 
-function displayParagraph(paraIndex) {
-  if (paraIndex >= 0 && paraIndex < paragraphs.length) {
-    textContainer.innerHTML = paragraphs[paraIndex];
-    currentPara = paraIndex;
+  function displayParagraph(paraIndex) {
+    if (paraIndex >= -1 && paraIndex < paragraphs.length) {
+      // Check if the current paragraph is the one you want to modify
+      if (paraIndex <= 0) {
+        arrow.style.display = 'none';
+      } else {
+        arrow.style.display = 'block';
+      }
 
-    // Hide the arrow if it's the first paragraph
-    if (currentPara === 0) {
-      arrow.style.display = 'none';
-    } else {
-      arrow.style.display = 'block';
+      if (paraIndex == -1) {
+        textContainer.innerHTML = paragraphs[paraIndex + 1];
+        currentPara = 0;
+
+        setTimeout(function () {
+          textContainer.classList.add("fade-in");
+        }, 50); // A small delay to ensure proper transition
+      } else {
+        textContainer.addEventListener("transitionend", function () {
+          textContainer.innerHTML = paragraphs[paraIndex];
+          currentPara = paraIndex;
+          textContainer.classList.remove("fade-out");
+
+          if (textContainer.innerHTML == "The End") {
+            setTimeout(function () {
+              window.location.href = "https://moeebii.github.io/thegardenofforkingpaths/";
+            }, 2000);
+          }
+          const isSpecialLine = paragraphs[paraIndex].includes("The garden of forking paths.");
+    
+          if (isSpecialLine) {
+            document.body.style.backgroundColor = '#0b1a31';
+          } else {
+            document.body.style.backgroundColor = '#D74B9A';
+          }
+
+          setTimeout(function () {
+            textContainer.classList.add("fade-in");
+          }, 500);
+        }, { once: true });
+      }
     }
-
-    textContainer.classList.add("fade-in");
   }
-}
 
-function displayNextParagraph() {
-  if (currentPara < paragraphs.length - 1) {
-    displayParagraph(currentPara + 1);
-  } else {
-    textContainer.innerHTML = "The End";
-    setTimeout(function () {
-      window.location.href = "https://moeebii.github.io/thegardenofforkingpaths/";
-    }, 2000);
+  function displayNextParagraph() {
+    textContainer.classList.add("fade-out");
+    if (currentPara < paragraphs.length) {
+      displayParagraph(currentPara + 1);
+    }
   }
-}
 
-function handleClick() {
-  if (event.target !== arrow) {
-    // Only go to the next paragraph if the click target is not the arrow
-    displayNextParagraph();
+  function handleClick(mouseEvent) {
+    if (mouseEvent.target !== arrow) {
+      // Only go to the next paragraph if the click target is not the arrow
+      displayNextParagraph();
+    }
   }
-}
 
-window.goToPreviousParagraph = function () {
-  if (currentPara > 0) {
-    displayParagraph(currentPara - 1);
-  }
-};
+  window.goToPreviousParagraph = function () {
+    if (currentPara > 0) {
+      textContainer.classList.add("fade-out");
+      displayParagraph(currentPara - 1);
+    }
+  };
 
-// Add click event listener to the document
-document.addEventListener("click", handleClick);
+  // Add click event listener to the document
+  document.addEventListener("click", handleClick);
 
-// Initial display
-displayParagraph(currentPara);
+  displayParagraph(-1);
 });
-
-function displayParagraph(paraIndex) {
-  if (paraIndex >= 0 && paraIndex < paragraphs.length) {
-    // Check if the current paragraph is the one you want to modify
-    const isSpecialLine = paragraphs[paraIndex].includes("The garden of forking paths.");
-
-    // If it's the special line, set background to pink and text color to #000C06
-    if (isSpecialLine) {
-      textContainer.style.backgroundColor = 'pink';
-      textContainer.style.color = '#000C06';
-    } else {
-      // Reset background and text color for other paragraphs
-      textContainer.style.backgroundColor = ''; // or set it to your default background color
-      textContainer.style.color = ''; // or set it to your default text color
-    }
-
-    textContainer.innerHTML = paragraphs[paraIndex];
-    currentPara = paraIndex;
-
-    // Hide the arrow if it's the first paragraph
-    if (currentPara === 0) {
-      arrow.style.display = 'none';
-    } else {
-      arrow.style.display = 'block';
-    }
-
-    // Remove existing "fade-in" class
-    textContainer.classList.remove("fade-in");
-
-    // Apply the "fade-in" class after a small delay
-    setTimeout(function () {
-      textContainer.classList.add("fade-in");
-    }, 500); // Adjust the delay (in milliseconds) to your preference
-  }
-}

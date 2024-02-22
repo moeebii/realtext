@@ -14,16 +14,22 @@ body {
 }
 
 .container {
-  background-color: #D74B9A;
+  background-color: rgba(215, 75, 154, 0);
   text-align: left;
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  transition: opacity 0.5s ease;  
+  opacity: 1;
 }
 
 .fade-in {
   opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
 
