@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   const paragraphs = [
+    "To Victoria Ocampo", 
     "In his A History of the World War (page 212), Captain Liddell Hart reports that a planned offensive by thirteen British divisions, supported by fourteen hundred artillery pieces, against the German line at Serre-Montauban, scheduled for July 24, 1916, had to be postponed until the morning of the 29th. He comments that torrential rain caused this delay - which lacked any special significance. The following deposition, dictated by, read over, and then signed by Dr. Yu Tsun, former teacher of English at the Tsingtao Hochschule, casts unsuspected light upon this event. The first two pages are missing.",
     "... and I hung up the phone. Immediately I recollected the voice that had spoken in German. It was that of Captain Richard Madden. Madden, in Viktor Runeberg's office, meant the end of all our work and - though this seemed a secondary matter, or should have seemed so to me - of our lives also. His being there meant that Runeberg had been arrested or murdered. 1 Before the sun set on this same day, I ran the same risk. Madden was implacable. Rather, to be more accurate, he was obliged to be implacable. An Irishman in the service of England, a man suspected of equivocal feelings if not of actual treachery, how could he fail to welcome and seize upon this extraordinary piece of luck: the discovery, capture and perhaps the deaths of two agents of Imperial Germany?",
     "I went up to my bedroom. Absurd though the gesture was, I closed and locked the door. I threw myself down on my narrow iron bed, and waited on my back. The never changing rooftops filled the window, and the hazy six o'clock sun hung in the sky. It seemed incredible that this day, a day without warnings or omens, might be that of my implacable death. In despite of my dead father, in despite of having been a child in one of the symmetrical gardens of Hai Feng, was I to die now? ",
@@ -72,9 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   let currentPara = 0;
+  let isTransitioning = false;
 
   function displayParagraph(paraIndex) {
-    if (paraIndex >= -1 && paraIndex < paragraphs.length) {
+    if (!isTransitioning && paraIndex >= -1 && paraIndex < paragraphs.length) {
+      isTransitioning = true;
       // Check if the current paragraph is the one you want to modify
       if (paraIndex <= 0) {
         arrow.style.display = 'none';
@@ -83,17 +86,27 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (paraIndex == -1) {
-        textContainer.innerHTML = paragraphs[paraIndex + 1];
+        const firstPart = paragraphs[paraIndex + 1][0];
+        const secondPart = paragraphs[paraIndex + 1].slice(1);
+        textContainer.innerHTML = `<span class="special-font">${firstPart}</span>${secondPart}`;
         currentPara = 0;
 
         setTimeout(function () {
           textContainer.classList.add("fade-in");
+          isTransitioning = false;
         }, 50); // A small delay to ensure proper transition
       } else {
         textContainer.addEventListener("transitionend", function () {
-          textContainer.innerHTML = paragraphs[paraIndex];
+          if (paraIndex == 0) {
+            const firstPart = paragraphs[paraIndex][0];
+            const secondPart = paragraphs[paraIndex].slice(1);
+            textContainer.innerHTML = `<span class="special-font">${firstPart}</span>${secondPart}`;
+          } else {
+            textContainer.innerHTML = paragraphs[paraIndex];
+          }
           currentPara = paraIndex;
           textContainer.classList.remove("fade-out");
+          isTransitioning = false;
 
           if (textContainer.innerHTML == "The End") {
             setTimeout(function () {
@@ -104,28 +117,31 @@ document.addEventListener("DOMContentLoaded", function () {
     
           if (isSpecialLine) {
             document.body.style.backgroundColor = '#0b1a31';
+            textContainer.style.fontSize = '2rem';
           } else {
             document.body.style.backgroundColor = '#D74B9A';
+            textContainer.style.fontSize = '1rem';
           }
 
           setTimeout(function () {
             textContainer.classList.add("fade-in");
-          }, 500);
+          }, 200);
         }, { once: true });
       }
     }
   }
 
   function displayNextParagraph() {
-    textContainer.classList.add("fade-out");
-    if (currentPara < paragraphs.length) {
-      displayParagraph(currentPara + 1);
+    if (!isTransitioning) {
+      textContainer.classList.add("fade-out");
+      if (currentPara < paragraphs.length) {
+        displayParagraph(currentPara + 1);
+      }
     }
   }
 
   function handleClick(mouseEvent) {
-    if (mouseEvent.target !== arrow) {
-      // Only go to the next paragraph if the click target is not the arrow
+    if (!isTransitioning && mouseEvent.target !== arrow) {
       displayNextParagraph();
     }
   }
