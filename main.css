@@ -19,14 +19,14 @@ body {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  transition: opacity 0.5s ease; /* Add transition for fade effect */
+  transition: opacity 0.5s ease;  
 }
 
 .fade-in {
   opacity: 1;
 }
 
-/* Add arrow styling */
+
 .arrow {
   position: absolute;
   top: 10px;
